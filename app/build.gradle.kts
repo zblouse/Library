@@ -41,6 +41,8 @@ dependencies {
     implementation("androidx.core:core-splashscreen:1.0.0")
     implementation("com.firebaseui:firebase-ui-auth:7.2.0")
     implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.android.material:material:1.3.0-alpha03")
+    implementation("androidx.fragment:fragment:1.8.5")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
