@@ -1,5 +1,6 @@
 package com.zblouse.library;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +18,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class UserHomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -64,7 +66,16 @@ public class UserHomeActivity extends AppCompatActivity implements NavigationVie
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int selectedItem = item.getItemId();
+        if(selectedItem == R.id.nav_logout){
+            FirebaseAuth.getInstance().signOut();
+            Intent returnToLoginIntent = new Intent(UserHomeActivity.this,LoginActivity.class);
+            startActivity(returnToLoginIntent);
+        } else if(selectedItem == R.id.add_book_button){
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new HomeFragment()).commit();
+        }
         drawerLayout.closeDrawer(GravityCompat.START);
-        return false;
+        return true;
     }
 }

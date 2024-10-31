@@ -51,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
             new ActivityResultCallback<FirebaseAuthUIAuthenticationResult>() {
                 @Override
                 public void onActivityResult(FirebaseAuthUIAuthenticationResult result) {
-                    initializeUserData();
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     Intent intent = new Intent(LoginActivity.this, UserHomeActivity.class);
                     startActivity(intent);
                 }
@@ -69,6 +69,12 @@ public class LoginActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user != null){
+            Intent sendToUserHomeIntent = new Intent(LoginActivity.this, UserHomeActivity.class);
+            startActivity(sendToUserHomeIntent);
+        }
 
         Button loginButton = findViewById(R.id.login_button);
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -106,26 +112,5 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    //TODO move this to it's own activity with user entry fields
-    private void initializeUserData(){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        Map<String, Object> newUser = new HashMap<>();
-        newUser.put("name","ZachTest1");
-        newUser.put("uid", user.getUid());
-        db.collection("users")
-                .add(newUser)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                    }
-                });
-    }
+
 }
