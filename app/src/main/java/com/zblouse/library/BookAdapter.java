@@ -1,5 +1,6 @@
 package com.zblouse.library;
 
+import android.app.Activity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +43,8 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
             @Override
             public void onClick(View view) {
                 System.out.println("Clicked BOOK: " + book.getTitle());
+                ((UserHomeActivity)view.getContext()).getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new BookViewFragment(book)).commit();
             }
         });
     }
