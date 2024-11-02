@@ -71,9 +71,12 @@ public class UserHomeActivity extends AppCompatActivity implements NavigationVie
             FirebaseAuth.getInstance().signOut();
             Intent returnToLoginIntent = new Intent(UserHomeActivity.this,LoginActivity.class);
             startActivity(returnToLoginIntent);
-        } else if(selectedItem == R.id.add_book_button){
+        } else if(selectedItem == R.id.nav_addBook){
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new HomeFragment()).commit();
+                    .replace(R.id.fragment_container, new AddBookFragment()).commit();
+
+        } else {
+            System.out.println("Selected Item: " + selectedItem);
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
