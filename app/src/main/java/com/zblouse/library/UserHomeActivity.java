@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -19,6 +20,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class UserHomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -36,10 +38,13 @@ public class UserHomeActivity extends AppCompatActivity implements NavigationVie
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         drawerLayout = findViewById(R.id.user_home);
         navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
+        TextView headerTextView = navigationView.getHeaderView(0).findViewById(R.id.nav_drawer_header_title);
+        headerTextView.setText(user.getDisplayName());
         actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,R.string.open_drawer,R.string.close_drawer);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
