@@ -1,14 +1,12 @@
 package com.zblouse.library;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import androidx.annotation.NonNull;
-
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * POJO for the Book object
+ */
 public class Book implements Serializable {
 
     public static final String DATABASE_TITLE_KEY = "title";
@@ -50,6 +48,10 @@ public class Book implements Serializable {
         this.read = read;
     }
 
+    /**
+     * Returns a map object in the format needed to store in firestore
+     * @return
+     */
     public Map<String, Object> getMap(){
         Map<String, Object> book = new HashMap<>();
         book.put(DATABASE_TITLE_KEY,title);

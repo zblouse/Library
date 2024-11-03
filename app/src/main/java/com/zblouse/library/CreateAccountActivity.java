@@ -17,6 +17,10 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+/**
+ * Activity for registering a new user account. User will need to authenticate with Firebase before
+ * they are able to create an account.
+ */
 public class CreateAccountActivity extends AppCompatActivity {
 
     private Context context;

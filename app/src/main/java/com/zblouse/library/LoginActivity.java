@@ -1,11 +1,8 @@
 package com.zblouse.library;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -13,7 +10,6 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -23,24 +19,24 @@ import androidx.core.splashscreen.SplashScreen;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+/**
+ * Activity that allows the user to login or create an account. This is the first screen an unauthenticated user is shown.
+ */
 public class LoginActivity extends AppCompatActivity implements FirestoreCallback {
     private boolean clickedLogin = false;
     private boolean clickedCreate = false;
     private Context context;
     private FirestoreCallback callback = this;
 
+    /**
+     * Result launcher from Firebase Authentication if the user clicked Login
+     */
     private final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
             new FirebaseAuthUIActivityResultContract(),
             new ActivityResultCallback<FirebaseAuthUIAuthenticationResult>() {
@@ -54,6 +50,9 @@ public class LoginActivity extends AppCompatActivity implements FirestoreCallbac
             }
     );
 
+    /**
+     * Result launcher from Firebase Authentication if the user clicked Create Account
+     */
     private final ActivityResultLauncher<Intent> createAccountLauncher = registerForActivityResult(
             new FirebaseAuthUIActivityResultContract(),
             new ActivityResultCallback<FirebaseAuthUIAuthenticationResult>() {
@@ -120,14 +119,22 @@ public class LoginActivity extends AppCompatActivity implements FirestoreCallbac
         });
     }
 
-
+    /**
+     * Part of the FirestoreCallback interface, but not actually used here.
+     * @param books
+     */
     @Override
     public void dataReturned(List<Book> books) {
 
     }
 
+    /**
+     * FirestoreCallback interface that is called when Firestore fetches the user object
+     * @param user
+     */
     @Override
     public void userReturned(User user) {
+        //If we are in the login flow
         if (clickedLogin) {
             if (user != null) {
                 Intent intent = new Intent(LoginActivity.this, UserHomeActivity.class);
@@ -137,6 +144,7 @@ public class LoginActivity extends AppCompatActivity implements FirestoreCallbac
                 Intent intent = new Intent(LoginActivity.this, CreateAccountActivity.class);
                 startActivity(intent);
             }
+            //If we are in the Create account flow
         } else if (clickedCreate){
             if (user == null) {
                 Intent intent = new Intent(LoginActivity.this, CreateAccountActivity.class);
@@ -150,11 +158,15 @@ public class LoginActivity extends AppCompatActivity implements FirestoreCallbac
                 startActivity(sendToUserHomeIntent);
             }
         } else {
+            //Logic for if the user is already authenticated with firebase without clicking login(returning to an active session)
             if (user != null) {
                 Intent intent = new Intent(LoginActivity.this, UserHomeActivity.class);
                 intent.putExtra("user", user);
                 startActivity(intent);
             } else {
+                //User is authenticated with firebase, without having an account.
+                // Weird edge case I ran into after deleting the database without signing out. Users are
+                //not likely to enter this scenario, but it is covered.
                 FirebaseAuth.getInstance().signOut();
             }
         }

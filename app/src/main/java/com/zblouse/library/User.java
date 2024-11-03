@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * POJO for the User object
+ */
 public class User implements Serializable {
 
     public static final String DATABASE_USER_ID_KEY = "uid";
@@ -29,6 +32,10 @@ public class User implements Serializable {
         return this.name;
     }
 
+    /**
+     * Returns a map to be stored in Firestore
+     * @return
+     */
     public Map<String, Object> getMap(){
         Map<String, Object> user = new HashMap<>();
         user.put(DATABASE_NAME_KEY,name);

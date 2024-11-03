@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import androidx.fragment.app.Fragment;
@@ -18,6 +16,11 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
+/**
+ * Fragment for the 'home' screen displayed in the UserHomeActivity. Shows a recycler view of all of
+ * the user's registered books. Implements FirestoreCallback to allow it to query firestore for
+ * the list of user's books.
+ */
 public class HomeFragment extends Fragment implements FirestoreCallback{
     private LinearLayout layout;
     public HomeFragment() {
@@ -38,6 +41,10 @@ public class HomeFragment extends Fragment implements FirestoreCallback{
 
     }
 
+    /**
+     * Callback method called when Firestore fetches the list of books
+     * @param books
+     */
     @Override
     public void dataReturned(List<Book> books) {
         System.out.println("Books count: " + books.size());

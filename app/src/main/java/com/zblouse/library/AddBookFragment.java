@@ -13,6 +13,9 @@ import androidx.fragment.app.Fragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+/**
+ * Fragment shown from the UserHomeActivity that allows the user to add a book to their list
+ */
 public class AddBookFragment extends Fragment {
     public AddBookFragment() {
         super(R.layout.fragment_new_book);

@@ -1,7 +1,5 @@
 package com.zblouse.library;
 
-import android.app.Activity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+/**
+ * Adapter to show Books in a recycler view
+ */
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
 
     private final List<Book> books;
@@ -39,6 +40,8 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
             holder.readTextView.setText("Not Read");
         }
 
+        //If this book is clicked in the list, start the BookViewFragment, which shows the book's information
+        //and allows the user to mark the book as read.
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

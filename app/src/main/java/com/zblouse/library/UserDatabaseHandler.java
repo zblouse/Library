@@ -7,18 +7,14 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
-import java.util.Map;
-
+/**
+ * Firestore Database handler for the User objects
+ */
 public class UserDatabaseHandler {
 
     public static void createUser(User user){
@@ -28,6 +24,11 @@ public class UserDatabaseHandler {
                 .set(user.getMap());
     }
 
+    /**
+     * Asynchronously fetches user objects out of firestore, requires a callback
+     * @param userId
+     * @param callback
+     */
     public static void getUser(String userId, FirestoreCallback callback){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference documentReference = db.collection("users").document(userId);

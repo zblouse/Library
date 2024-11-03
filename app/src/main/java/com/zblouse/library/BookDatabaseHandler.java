@@ -1,34 +1,29 @@
 package com.zblouse.library;
 
-import static android.content.ContentValues.TAG;
-
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
+/**
+ * Firebase Firestore handler for book objects
+ */
 public class BookDatabaseHandler {
 
     private static final String bookCollection = "books";
 
+    /**
+     * Stores books into firestore
+     * @param book
+     */
     public static void addBookToDatabase(Book book){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(bookCollection)
@@ -36,6 +31,11 @@ public class BookDatabaseHandler {
                 .set(book.getMap());
     }
 
+    /**
+     * Retrieves books from firestore, though since firestore is asynchronous, it requries a callback
+     * @param uid
+     * @param callback
+     */
     public static void getBooksForUser(String uid, FirestoreCallback callback){
         System.out.println("Getting books for User: " + uid);
         FirebaseFirestore db = FirebaseFirestore.getInstance();

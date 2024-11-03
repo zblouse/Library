@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -12,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
-import androidx.core.splashscreen.SplashScreen;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -20,8 +18,10 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
+/**
+ * Home activity the user is presented with after authenticating with the application. Contains a navigation drawer to switch between different fragments
+ */
 public class UserHomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private DrawerLayout drawerLayout;
@@ -74,21 +74,31 @@ public class UserHomeActivity extends AppCompatActivity implements NavigationVie
         return true;
     }
 
+    /**
+     * Method that is called when a navigation item is selected in the navigation drawer
+     * @param item The selected item
+     * @return
+     */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int selectedItem = item.getItemId();
         if(selectedItem == R.id.nav_logout){
+            //Logout navigation item has been selected, sign the user out of firebase and return to login activity
             FirebaseAuth.getInstance().signOut();
             Intent returnToLoginIntent = new Intent(UserHomeActivity.this,LoginActivity.class);
             startActivity(returnToLoginIntent);
         } else if(selectedItem == R.id.nav_addBook){
+            //Add book navigation item has been selected, switch the active fragment to the AddBookFragment
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new AddBookFragment()).commit();
 
         } else if(selectedItem == R.id.nav_home){
+            //Home navigation item has been selected, switch the active fragment to the HomeFragment
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new HomeFragment()).commit();
         }else {
+            //Should not fall into this case, useful during testing to see Navigation Drawer was working correctly
+            //Could be removed, but keeping to make further expansion easier.
             System.out.println("Selected Item: " + selectedItem);
         }
         drawerLayout.closeDrawer(GravityCompat.START);

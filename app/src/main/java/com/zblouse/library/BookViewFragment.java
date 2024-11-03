@@ -5,12 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+/**
+ * Fragment to display a book's information in the UserHomeActivity
+ */
 public class BookViewFragment extends Fragment {
 
     private Book book;
