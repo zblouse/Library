@@ -38,13 +38,18 @@ public class UserHomeActivity extends AppCompatActivity implements NavigationVie
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        User user = getIntent().getSerializableExtra("user",User.class);
+        if(user == null){
+            Intent sendToLoginIntent = new Intent(UserHomeActivity.this, LoginActivity.class);
+            startActivity(sendToLoginIntent);
+        }
 
         drawerLayout = findViewById(R.id.user_home);
         navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
         TextView headerTextView = navigationView.getHeaderView(0).findViewById(R.id.nav_drawer_header_title);
-        headerTextView.setText(user.getDisplayName());
+        headerTextView.setText(user.getName());
         actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,R.string.open_drawer,R.string.close_drawer);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
@@ -80,7 +85,10 @@ public class UserHomeActivity extends AppCompatActivity implements NavigationVie
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new AddBookFragment()).commit();
 
-        } else {
+        } else if(selectedItem == R.id.nav_home){
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new HomeFragment()).commit();
+        }else {
             System.out.println("Selected Item: " + selectedItem);
         }
         drawerLayout.closeDrawer(GravityCompat.START);

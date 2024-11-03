@@ -2,11 +2,13 @@ package com.zblouse.library;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultCallback;
@@ -33,15 +35,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements FirestoreCallback {
+    private boolean clickedLogin = false;
+    private boolean clickedCreate = false;
+    private Context context;
+    private FirestoreCallback callback = this;
 
     private final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
             new FirebaseAuthUIActivityResultContract(),
             new ActivityResultCallback<FirebaseAuthUIAuthenticationResult>() {
                 @Override
                 public void onActivityResult(FirebaseAuthUIAuthenticationResult result) {
-                    Intent intent = new Intent(LoginActivity.this, UserHomeActivity.class);
-                    startActivity(intent);
+                    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                    clickedLogin = true;
+                    clickedCreate = false;
+                    UserDatabaseHandler.getUser(firebaseUser.getUid(), callback);
                 }
             }
     );
@@ -51,8 +59,9 @@ public class LoginActivity extends AppCompatActivity {
             new ActivityResultCallback<FirebaseAuthUIAuthenticationResult>() {
                 @Override
                 public void onActivityResult(FirebaseAuthUIAuthenticationResult result) {
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    Intent intent = new Intent(LoginActivity.this, UserHomeActivity.class);
+                    clickedLogin = false;
+                    clickedCreate = true;
+                    Intent intent = new Intent(LoginActivity.this, CreateAccountActivity.class);
                     startActivity(intent);
                 }
             }
@@ -69,11 +78,10 @@ public class LoginActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
+        context = this;
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user != null){
-            Intent sendToUserHomeIntent = new Intent(LoginActivity.this, UserHomeActivity.class);
-            startActivity(sendToUserHomeIntent);
+            UserDatabaseHandler.getUser(user.getUid(), this);
         }
 
         Button loginButton = findViewById(R.id.login_button);
@@ -113,4 +121,42 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void dataReturned(List<Book> books) {
+
+    }
+
+    @Override
+    public void userReturned(User user) {
+        if (clickedLogin) {
+            if (user != null) {
+                Intent intent = new Intent(LoginActivity.this, UserHomeActivity.class);
+                intent.putExtra("user", user);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(LoginActivity.this, CreateAccountActivity.class);
+                startActivity(intent);
+            }
+        } else if (clickedCreate){
+            if (user == null) {
+                Intent intent = new Intent(LoginActivity.this, CreateAccountActivity.class);
+                startActivity(intent);
+
+            } else{
+                Toast toast = Toast.makeText(context,"Account already exists", Toast.LENGTH_SHORT);
+                toast.show();
+                Intent sendToUserHomeIntent = new Intent(LoginActivity.this, UserHomeActivity.class);
+                sendToUserHomeIntent.putExtra("user", user);
+                startActivity(sendToUserHomeIntent);
+            }
+        } else {
+            if (user != null) {
+                Intent intent = new Intent(LoginActivity.this, UserHomeActivity.class);
+                intent.putExtra("user", user);
+                startActivity(intent);
+            } else {
+                FirebaseAuth.getInstance().signOut();
+            }
+        }
+    }
 }

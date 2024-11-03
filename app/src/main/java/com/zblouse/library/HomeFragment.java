@@ -50,4 +50,9 @@ public class HomeFragment extends Fragment implements FirestoreCallback{
         recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setLayoutManager(layoutManager);
     }
+
+    @Override
+    public void userReturned(User user) {
+
+    }
 }

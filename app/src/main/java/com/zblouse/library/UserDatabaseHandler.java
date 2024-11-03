@@ -28,25 +28,25 @@ public class UserDatabaseHandler {
                 .set(user.getMap());
     }
 
-    public static User getUser(String userId){
+    public static void getUser(String userId, FirestoreCallback callback){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference documentReference = db.collection("users").document(userId);
-        DocumentSnapshot snapshot = documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    if(document.exists()) {
+                        User user = new User(document.getData());
+                        callback.userReturned(user);
                     } else {
-                        Log.d(TAG, "No such document");
+                        callback.userReturned(null);
                     }
                 } else {
                     Log.d(TAG, "get failed with ", task.getException());
+                    callback.userReturned(null);
                 }
             }
-        }).getResult();
-
-        return new User(snapshot.getString(User.DATABASE_USER_ID_KEY), snapshot.getString(User.DATABASE_NAME_KEY));
+        });
     }
 }
